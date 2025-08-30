@@ -1,0 +1,26 @@
+@startuml
+
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person(user, "Сотрудник", "Использует портал для построения отчётов и анализа")
+
+System_Boundary(system, "Единая аналитическая система") {
+
+    Container(portal, "Self-Service BI Portal", "Web-приложение", "Построение отчётов и дашбордов для сотрудников")
+    Container(dwh, "Data Lake + Data Warehouse", "Big Data Platform", "Хранение очищенных и агрегированных данных")
+    Container(integration, "Слой интеграции", "Kafka / API / Data Mesh", "Интеграция данных из разных бизнесов")
+    Container(ai, "ИИ-сервисы", "ML/AI", "Анализ медицинских и бизнес-данных")
+    Container(fintech, "Финтех-сервисы", "Banking APIs", "Банковские и финтех-продукты")
+    Container(legacy, "Legacy DWH", "SQL Server 2008 + Power Builder", "Старый хранилище и отчётность (устаревает)")
+}
+
+Rel(user, portal, "Строит отчёты и дашборды")
+Rel(portal, dwh, "Запрашивает данные")
+Rel(dwh, integration, "Получает данные")
+Rel(integration, ai, "Передаёт данные для анализа")
+Rel(integration, fintech, "Передаёт данные в финансовые сервисы")
+Rel(legacy, portal, "Обеспечивает часть отчётов (устаревшие)")
+
+@enduml
