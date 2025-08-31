@@ -5,22 +5,25 @@
 LAYOUT_WITH_LEGEND()
 
 Person(user, "Сотрудник", "Использует портал для построения отчётов и анализа")
+Container_Ext(inner, "Внутренние сервисы", "Inner API", "Внутренние системы передачи данных")
+Container_Ext(ai, "ИИ-сервисы", "ML/AI", "Анализ медицинских и бизнес-данных")
+Container_Ext(fintech, "Финтех-сервисы", "Banking APIs", "Банковские и финтех-продукты")
 
 System_Boundary(system, "Единая аналитическая система") {
-
-    Container(portal, "Self-Service BI Portal", "Web-приложение", "Построение отчётов и дашбордов для сотрудников")
-    Container(dwh, "Data Lake + Data Warehouse", "Big Data Platform", "Хранение очищенных и агрегированных данных")
-    Container(integration, "Слой интеграции", "Kafka / API / Data Mesh", "Интеграция данных из разных бизнесов")
-    Container(ai, "ИИ-сервисы", "ML/AI", "Анализ медицинских и бизнес-данных")
-    Container(fintech, "Финтех-сервисы", "Banking APIs", "Банковские и финтех-продукты")
+	Container(apiGateway, "API Gateway", "API", "Единая точка входа для всех сервисов")
+    Container(portalFrontend, "Self-Service BI Portal", "Web-приложение", "Построение отчётов и дашбордов для сотрудников")
+    Container(dataPlatform, "Data Platform", "Data Mesh", "Хранение очищенных и агрегированных данных по продуктам данных")
+    Container(ESB, "Шина данных", "Apache Camel", "Интеграция данных из разных источников")
     Container(legacy, "Legacy DWH", "SQL Server 2008 + Power Builder", "Старый хранилище и отчётность (устаревает)")
 }
 
-Rel(user, portal, "Строит отчёты и дашборды")
-Rel(portal, dwh, "Запрашивает данные")
-Rel(dwh, integration, "Получает данные")
-Rel(integration, ai, "Передаёт данные для анализа")
-Rel(integration, fintech, "Передаёт данные в финансовые сервисы")
-Rel(legacy, portal, "Обеспечивает часть отчётов (устаревшие)")
+Rel(user, portalFrontend, "Строит отчёты и дашборды")
+Rel(portalFrontend, apiGateway, "Отправляет запросы")
+Rel(apiGateway, dataPlatform, "Запрашивает данные")
+Rel(dataPlatform, ESB, "Получает данные")
+Rel(inner, ESB, "Передаёт данные из внутренних систем")
+Rel(ESB, ai, "Передаёт данные для анализа")
+Rel(ESB, fintech, "Передаёт данные в финансовые сервисы")
+Rel(legacy, apiGateway, "Обеспечивает часть отчётов (устаревшие)")
 
 @enduml
