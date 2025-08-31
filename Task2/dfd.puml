@@ -1,0 +1,23 @@
+@startuml
+actor User
+
+rectangle Финансы as Finance
+rectangle "Клиенты и персонал" as Clients
+rectangle "Медицинский" as Medical
+rectangle "Продажи и маркетинг" as Sales
+rectangle "Операции и инвентаризация" as Ops
+rectangle "Инвентарь, логистика" as Inventory
+rectangle "Data Lake\n(общий слой аналитики)" as DataLake
+rectangle "Self-Service BI Portal" as BI
+
+Finance -right-> DataLake : Финансовые транзакции
+Clients -down-> DataLake : Данные сотрудников/клиентов
+Medical -down-> DataLake : Медицинские данные
+Sales -down-> DataLake : Продажи, маркетинг
+Ops -down-> DataLake : Операционные данные
+Inventory -down-> DataLake : Инвентарь, логистика
+
+DataLake -right-> BI : Объединённые аналитические данные
+
+User -down-> BI : Запрос отчётов и аналитики
+@enduml
